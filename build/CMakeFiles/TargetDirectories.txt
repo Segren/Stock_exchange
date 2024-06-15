@@ -1,7 +1,0 @@
-/Users/dgon/Documents/stock_exchange/build/CMakeFiles/server.dir
-/Users/dgon/Documents/stock_exchange/build/CMakeFiles/client.dir
-/Users/dgon/Documents/stock_exchange/build/CMakeFiles/test_trade_logic.dir
-/Users/dgon/Documents/stock_exchange/build/CMakeFiles/test_server.dir
-/Users/dgon/Documents/stock_exchange/build/CMakeFiles/test.dir
-/Users/dgon/Documents/stock_exchange/build/CMakeFiles/edit_cache.dir
-/Users/dgon/Documents/stock_exchange/build/CMakeFiles/rebuild_cache.dir
