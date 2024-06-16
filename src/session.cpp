@@ -120,7 +120,7 @@ void Session::handle_read(const boost::system::error_code& error,
                 auto orders = trade_logic_.get_active_sell_orders(); 
                 json response;
                 if(orders.empty()){
-                    response = {{"message", "Mo sell orders have been made yet"}};
+                    response = {{"message", "No sell orders have been made yet"}};
                     reply  = response.dump(1);
                 } else{
                     for(const auto& order : orders) {

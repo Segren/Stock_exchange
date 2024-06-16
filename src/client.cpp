@@ -1,6 +1,6 @@
 #include "client.h"
 
-const int port = 12345;
+constexpr int port = 12345;
 
 namespace Requests {
     const std::string Registration = "Registration";
@@ -73,7 +73,7 @@ int main()
         // Тут мы "регистрируем" пользователя - отправляем на сервер имя, а сервер возвращает нам ID.
         // Этот ID далее используется при отправке запросов.
         std::string my_id = ProcessRegistration(s);
-    std::cout << "Registered with ID: " << my_id << std::endl;
+        std::cout << "Registered with ID: " << my_id << std::endl;
 
         while (true)
         {

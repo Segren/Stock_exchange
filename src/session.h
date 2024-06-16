@@ -32,6 +32,7 @@ public:
     std::string get_price(const json& j);
     std::string get_volume(const json& j);
 
+
     // Обработка полученного сообщения.
     void handle_read(const boost::system::error_code& error,
         size_t bytes_transferred);
@@ -39,6 +40,7 @@ public:
     void handle_write(const boost::system::error_code& error);
 
     void set_from_test(bool value) { from_test_ = value; }
+
 
 private:
     tcp::socket socket_;

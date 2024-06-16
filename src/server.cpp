@@ -35,6 +35,3 @@ void Server::handle_accept(std::shared_ptr<Session> new_session, const boost::sy
     }
 }
 
-
-
-

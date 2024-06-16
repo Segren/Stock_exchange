@@ -20,7 +20,7 @@ protected:
             io_service_->run();
         });
         std::cout << "SetUp finished" << std::endl;
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::this_thread::sleep_for(std::chrono::seconds(1)); //Дает время серверу запуститься + удобно для отладки. Закомментить для быстрого прохода тестов
     }
 
     void TearDown() override {
@@ -61,16 +61,11 @@ protected:
             }
 
             std::istream is(&response);
-            std::string reply;
-            std::getline(is, reply);
+            std::string reply((std::istreambuf_iterator<char>(is)), std::istreambuf_iterator<char>());
             std::cout << "send_request: Received reply: " << reply << std::endl;
 
             std::cout << "send_request: Shutting down socket" << std::endl;
-            try{
-                socket.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
-            } catch (const boost::system::system_error& e) {
-                std::cerr << "Exception in socket shutdown: " << e.what() << std::endl;
-            }
+
             socket.close();
             std::cout << "Request sent and response received" << std::endl;
             return reply;
@@ -113,7 +108,7 @@ TEST_F(ServerTest, Hello){
 
         std::string response = send_request(request);
 
-        EXPECT_EQ(response, "Hello, User2!");
+        EXPECT_EQ(response, "Hello, User2!\n");
     } catch (const std::exception& e) {
         std::cerr << "Exception in Hello test: " << e.what() << std::endl;
         throw;
@@ -207,6 +202,85 @@ TEST_F(ServerTest, OrderExecution) {
     }
 }
 
+TEST_F(ServerTest, ViewActiveBuyOrders) {
+    std::cout << "Test View Active Buy Orders started" << std::endl;
+    try {
+        std::string reg_request = R"({"ReqType": "Registration", "Message": "User6", "Test": true})";
+        std::string reg_response = send_request(reg_request);
+        std::string user_id = reg_response;
+
+        std::string buy_orders_request = R"({"ReqType": "ActiveBuyOrders", "UserId": )" + user_id + R"(, "Test": true})";
+        std::string buy_orders_response = send_request(buy_orders_request);
+
+        // Ожидаем пустой список ордеров на покупку для нового пользователя
+        std::string expected_response = "{\n \"message\": \"No buy orders have been made yet\"\n}";
+        EXPECT_EQ(buy_orders_response, expected_response);
+        std::cout << "Test View Active Buy Orders finished" << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "Exception in View Active Buy Orders test: " << e.what() << std::endl;
+        throw;
+    }
+}
+
+TEST_F(ServerTest, ViewActiveSellOrders) {
+    std::cout << "Test View Active Sell Orders started" << std::endl;
+    try {
+        std::string reg_request = R"({"ReqType": "Registration", "Message": "User7", "Test": true})";
+        std::string reg_response = send_request(reg_request);
+        std::string user_id = reg_response;
+
+        std::string sell_orders_request = R"({"ReqType": "ActiveSellOrders", "UserId": )" + user_id + R"(, "Test": true})";
+        std::string sell_orders_response = send_request(sell_orders_request);
+
+        // Ожидаем пустой список ордеров на продажу для нового пользователя
+        std::string expected_response = "{\n \"message\": \"No sell orders have been made yet\"\n}";
+        EXPECT_EQ(sell_orders_response, expected_response);
+        std::cout << "Test View Active Sell Orders finished" << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "Exception in View Active Sell Orders test: " << e.what() << std::endl;
+        throw;
+    }
+}
+
+TEST_F(ServerTest, ViewTradeHistory) {
+    std::cout << "Test View Trade History started" << std::endl;
+    try {
+        std::string reg_request = R"({"ReqType": "Registration", "Message": "User8", "Test": true})";
+        std::string reg_response = send_request(reg_request);
+        std::string user_id = reg_response;
+
+        std::string trade_history_request = R"({"ReqType": "GetTrades", "UserId": )" + user_id + R"(, "Test": true})";
+        std::string trade_history_response = send_request(trade_history_request);
+
+        // Ожидаем пустую историю сделок для нового пользователя
+        std::string expected_response = "{\n \"message\": \"No trades have been made yet\"\n}";
+        EXPECT_EQ(trade_history_response, expected_response);
+        std::cout << "Test View Trade History finished" << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "Exception in View Trade History test: " << e.what() << std::endl;
+        throw;
+    }
+}
+
+TEST_F(ServerTest, ViewQuoteHistory) {
+    std::cout << "Test View Quote History started" << std::endl;
+    try {
+        std::string reg_request = R"({"ReqType": "Registration", "Message": "User9", "Test": true})";
+        std::string reg_response = send_request(reg_request);
+        std::string user_id = reg_response;
+
+        std::string quote_history_request = R"({"ReqType": "GetQuoteHistory", "UserId": )" + user_id + R"(, "Test": true})";
+        std::string quote_history_response = send_request(quote_history_request);
+
+        // Ожидаем пустую историю котировок для нового пользователя
+        std::string expected_response = "{\n \"message\": \"No quote history just yet\"\n}";
+        EXPECT_EQ(quote_history_response, expected_response);
+        std::cout << "Test View Quote History finished" << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "Exception in View Quote History test: " << e.what() << std::endl;
+        throw;
+    }
+}
 
 
 

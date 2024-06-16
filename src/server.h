@@ -29,6 +29,6 @@ private:
     TradeLogic trade_logic_;
     std::unordered_map<int, Balance> clients_balances_;
     Core& core_;
-}; 
+};
 
 #endif // SERVER_H
